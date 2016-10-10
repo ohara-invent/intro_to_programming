@@ -6,7 +6,7 @@ from spellchecker import spellcheck, write_file, apply_corrections_interactively
 def main(text_filename, dictionary_filename):
 	output_filename = text_filename
 
-	original_text, corrected_text, words_list, wrong_words_index = spellcheck(text_filename, output_filename)
+	original_text, corrected_text, words_list, wrong_words_index = spellcheck(text_filename, output_filename, dictionary_filename)
 
 	while True:
 		print("(Select an option below)")

@@ -1,8 +1,12 @@
 from collections import Counter
 
 
-def spellcheck(text_filename, output_filename):
+word_counts = {}
+
+def spellcheck(text_filename, output_filename, dictionary_filename):
 	print("Checking for errors...")
+
+	initialise_word_counts(dictionary_filename)
 
 	original_text = read_file(text_filename)
 	words = extract_words(original_text)
@@ -34,7 +38,6 @@ def spellcheck(text_filename, output_filename):
 	print("Document has been successfully checked, and errors have been marked. What do you want to do next?\n")
 	return original_text, corrected_text, words, wrong_words_index
 
-
 def apply_corrections_interactively(filename, words_list, wrong_words_index):
 	for correction in wrong_words_index:
 
@@ -62,6 +65,13 @@ def apply_corrections_interactively(filename, words_list, wrong_words_index):
 def read_file(filename):
 	with open(filename, 'r') as file:
 		return file.read()
+
+
+def initialise_word_counts(dictionary_filename):
+	global word_counts
+	with open('big.txt', 'r') as file, open(dictionary_filename, 'r') as dictionary:
+	    corpus = file.read() + dictionary.read()
+	    word_counts = Counter(get_words(corpus))
 
 
 def extract_words(text):
@@ -96,12 +106,10 @@ def get_words(text):
 
 
 
-with open('big.txt', 'r') as file:
-    corpus = file.read()
-    word_counts = Counter(get_words(corpus))
 
-def get_probability(word, N=sum(word_counts.values())):
+def get_probability(word):
     "return probability of 'word'."
+    N=sum(word_counts.values())
     return word_counts[word] / N
 
 def get_correction(word):
