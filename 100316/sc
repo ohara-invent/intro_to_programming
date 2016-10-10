@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+import sys
+
+from spellchecker import spellcheck, write_file, apply_corrections_interactively
+
+def main(text_filename, dictionary_filename):
+	output_filename = text_filename
+
+	original_text, corrected_text, words_list, wrong_words_index = spellcheck(text_filename, output_filename)
+
+	while True:
+		print("(Select an option below)")
+
+		print("1. Never mind, ignore all the errors")
+		print("2. Great, go ahead and apply all the corrections")
+		print("3. That's good, I want to apply the corrections interactively")
+		print("4. Exit. Your job is here is done :)")
+
+		next_action = input("Select option: ")
+
+		if next_action == '1':
+			print("Ignoring all errors...")
+			write_file(output_filename, original_text)
+			return
+		elif next_action == '2':
+			print("Applying all corrections...")
+			write_file(output_filename, corrected_text)
+			return
+		elif next_action == '3':
+			print("Applying corrections interactively...")
+			apply_corrections_interactively(output_filename, words_list, wrong_words_index)
+			return
+		elif next_action == '4':
+			print("Exiting...")
+			return
+		else:
+			print("\nInvalid action!")
+			print()
+
+
+if __name__ == '__main__':
+	main(sys.argv[1], sys.argv[2])
+

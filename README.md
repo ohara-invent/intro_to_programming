@@ -1,1 +1,1 @@
-# intro_to_programming
+# intro_to_programming assignments
