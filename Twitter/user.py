@@ -1,8 +1,8 @@
 # import set
-from user import User
 from follow_request import FollowRequest
 from tweet import Tweet
-from user import Reply
+from reply import Reply
+from datetime import datetime
 
 
 class User(object):
@@ -13,8 +13,8 @@ class User(object):
     self.firstname = firstname
     self.lastname = lastname
 
-    self.follows = Set.new
-    self.follow_requests = Set.new
+    self.follows = set()
+    self.follow_requests = set()
     self.tweets = []
 
     print("Created {0}".format(self))
@@ -28,13 +28,13 @@ class User(object):
 
 
   def send_follow_request(self, other):
-    request = followRequest.new(self,  other)
+    request = FollowRequest(self,  other)
 
     other.follow_requests.add(request)
     print( "Sending follow request to {} ...".format(other))
 
   def accept_follow_requests(self):
-    requests = list_follow_requests
+    requests = self.list_follow_requests()
     
     while True:
       print( "press request number e.g. '0' to accept request")
@@ -47,18 +47,18 @@ class User(object):
           new_follow.follows.add(self)
           self.follows.add(new_follow)
 
-        print( "Accepted {} requests".format(requests.length))
+        print( "Accepted {} requests".format(len(requests)))
         break
-      elif answer.to_i >= 0 and answer.to_i < follow_requests.length:
+      elif int(answer) >= 0 and int(answer) < len(self.follow_requests):
         # accept particular request
-        new_follow = requests[answer.to_i].requester
+        new_follow = requests[int(answer)].requester
         new_follow.follows.add(self)
         self.follows.add(new_follow)
 
         print( "Accepted follow request from {}".format(new_follow))
         print( "press any key to continue or 'n' to exit")
         should_continue = input()
-        if should_continue.downcase == 'n':
+        if should_continue.lower() == 'n':
           break
      
       else:
@@ -67,57 +67,56 @@ class User(object):
  
 
   def unfollow(self, other):
-    if self.follows.include? other
-      self.follows.delete(other)
-      other.follows.delete(self)
-      print( "{self} unfollowed {other} ...".format(self.))
-    else
-      print( "{self} can't unfollow {other} because they were not follows in the first place ..."     .format(self.))
+    if other in self.follows:
+      self.follows.remove(other)
+      other.follows.remove(self)
+      print( "{} unfollowed {} ...".format(self, other))
+    else:
+      print( "{} can't unfollow {} because they were not follows in the first place ...".format(self, other))
  
 
-  def list_follows:self, 
+  def list_follows(self):
     print()
-    print( "Hi {self.firstname}!".format(self.))
-    print( "The following people are your follows:")
-    print( "---------------------------------------------------")
-    for value in  self.follows:
-      print( " {value}".format(self.))
+    print("Hi {}!".format(self))
+    print("The following people are your follows:")
+    print("---------------------------------------------------")
+    for value in self.follows:
+      print("{}".format(value))
 
-    print( "---------------------------------------------------")
+    print("---------------------------------------------------")
     print()
 
   def list_follow_requests(self):
-    requests = self.follow_requests.to_a
+    requests = list(self.follow_requests)
     print()
-    print( "Hi {self.firstname}!".format(self.))
+    print( "Hi {}!".format(self.firstname))
     print( "The following people want to be follows with you:")
     print( "---------------------------------------------------")
-    for index in  requests.each_with_index { :
-      print( "{index}: {value}".format(self.))
-    }
+    for index, value in  enumerate(requests):
+        print( "{}: {}".format(index, value))
     print( "---------------------------------------------------")
     print()
-    requests
+    return requests
 
 
 
   def create_tweet(self, message):
-    tweet = tweet.new(message, self,  Time.now)
-    self.tweets.push(tweet)
-    tweet
+    tweet = Tweet(message, self,  datetime.now())
+    self.tweets.append(tweet)
+    return tweet
 
   def list_tweets(self):
     print()
-    print( "Hi {self.firstname}!".format(self.))
+    print( "Hi {}!".format(self.firstname))
     print( "Here are all your tweets:")
     print( "---------------------------------------------------")
     for tweet in  self.tweets:
-      print( "{tweet}".format(self.))
+      print( "{}".format(tweet))
       print()
 
     print( "---------------------------------------------------")
     print()
-    self.tweets
+    return self.tweets
 
 
   def view_feed(self):
@@ -127,28 +126,28 @@ class User(object):
       # sort by date (latest first)
 
     feed = []
-    feed.concat(self.tweets)
+    feed.extend(self.tweets)
 
     for follow in  self.follows:
-      feed.concat(follow.tweets)
+      feed.extend(follow.tweets)
 
 
-    feed = feed.sort_by {|tweet| tweet.date}
+    feed.sort(key=lambda tweet: tweet.date, reverse=True)
 
     print()
-    print( "Hi {self.firstname}!".format(self.))
-    print( "Here is your feed for today:")
-    print( "---------------------------------------------------")
-    for tweet in  feed:
-      print( "{tweet}".format(self.))
+    print("Hi {}!".format(self.firstname))
+    print("Here is your feed for today:")
+    print("---------------------------------------------------")
+    for tweet in feed:
+      print("{}".format(tweet))
       print()
 
-    print( "---------------------------------------------------")
+    print("---------------------------------------------------")
     print()
     return feed
 
 
   def create_reply(self, message, parent):
-    reply = Reply.new(message, self,  Time.now, parent)
-    parent.replies.push(reply)
+    reply = Reply(message, self,  datetime.now(), parent)
+    parent.replies.append(reply)
     return reply

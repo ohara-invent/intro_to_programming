@@ -13,13 +13,13 @@ class Tweet(object):
 		result = ""
 		result += "{} ({})\n".format(self.author, self.date)
 		result += "{}\n".format(self.message)
-		result += "{} likes\n".format(self.like.length)
+		result += "{} likes\n".format(len(self.likes))
 		result += "\n\n"
-		if replies.length > 0:
+		if len(self.replies) > 0:
 			result += "\tReplies:\n"
 			result += "\t----------------------------------\n"
 
-			for reply in replies:
+			for reply in self.replies:
 				result += "\t"
 				result += str(reply)
 

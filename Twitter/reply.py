@@ -16,11 +16,11 @@ class Reply(Tweet):
 		result = ""
 		result += "{} ({})\n".format(self.author, self.date)
 		result += "{}\n".format(self.message)
-		result += "{} likes\n".format(self.likes.length)
-		if replies.length > 0:
+		result += "{} likes\n".format(len(self.likes))
+		if len(self.replies) > 0:
 			result += "\t------------------\n"
-			for reply in replies:
+			for reply in self.replies:
 				result += "\t"
-				result += reply.to_s
+				result += str(reply)
 
 		return result
